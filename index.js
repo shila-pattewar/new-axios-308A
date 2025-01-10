@@ -1,17 +1,18 @@
-import * as Carousel from "./Carousel.js";
-import axios from "axios";
+import * as Carousel from './Carousel.js';
+// You have axios, you don't need to import it
+console.log(axios);
 
 // The breed selection input element.
-const breedSelect = document.getElementById("breedSelect");
+const breedSelect = document.getElementById('breedSelect');
 // The information section div element.
-const infoDump = document.getElementById("infoDump");
+const infoDump = document.getElementById('infoDump');
 // The progress bar div element.
-const progressBar = document.getElementById("progressBar");
+const progressBar = document.getElementById('progressBar');
 // The get favourites button element.
-const getFavouritesBtn = document.getElementById("getFavouritesBtn");
+const getFavouritesBtn = document.getElementById('getFavouritesBtn');
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "";
+const API_KEY = 'live_idJUGho6IPXwcOLozWvpFLGjj3Jg0QoSd5It7nSxL6MTJRJjCQPxbr7rkPSJvnsI';
 
 /**
  * 1. Create an async function "initialLoad" that does the following:
@@ -21,6 +22,95 @@ const API_KEY = "";
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
+
+// const API_KEY =
+//   "live_idJUGho6IPXwcOLozWvpFLGjj3Jg0QoSd5It7nSxL6MTJRJjCQPxbr7rkPSJvnsI";
+
+async function initialLoad() {
+  try {
+    // Fetch breeds from the Cat API
+    const response = await fetch("https://api.thecatapi.com/v1/breeds", {
+      headers: {
+        "x-api-key":
+          "live_idJUGho6IPXwcOLozWvpFLGjj3Jg0QoSd5It7nSxL6MTJRJjCQPxbr7rkPSJvnsI",
+      },
+    });
+
+    const data = await response.json();
+    0;
+
+    const breedSelect = document.getElementById("breedSelect");
+
+    // recreate <option> elements
+    data.forEach((breed) => {
+      const option = document.createElement("option");
+      option.value = breed.id;
+      option.textContent = breed.name;
+      breedSelect.appendChild(option);
+    });
+
+    // Event handler for when the breed is selected from the dropdown
+    document
+      .getElementById("breedSelect")
+      .addEventListener("change", async (event) => {
+        const breedId = event.target.value; // Get the selected breed ID
+
+        if (breedId) {
+          try {
+            // Fetch breed information from the Cat API
+            const response = await fetch(
+              `https://api.thecatapi.com/v1/breeds/${breedId}`
+            );
+
+            // Check if the response is successful
+            if (!response.ok) {
+              throw new Error("Failed to fetch breed data");
+            }
+
+            // Parse the response as JSON
+            const breedData = await response.json();
+
+            // Now you can use breedData to display information about the selected breed
+            // For example, log it to the console
+            console.log(breedData);
+
+            // Assuming you want to update a section of the page with the breed data
+            updateBreedInfo(breedData);
+          } catch (error) {
+            console.error("Error fetching breed data:", error);
+          }
+        }
+      });
+
+    // Function to update the breed info on the page
+    function updateBreedInfo(breedData) {
+      // Get the element where you want to display the breed info
+      const infoDump = document.getElementById("infoDump");
+
+      
+
+      // Create HTML to display breed info
+      const breedInfo = `
+        <h2>${breedData.name}</h2>
+        <p><strong>Temperament:</strong> ${breedData.temperament}</p>
+        <p><strong>Origin:</strong> ${breedData.origin}</p>
+        <p><strong>Description:</strong> ${breedData.description}</p>
+    `;
+
+      // Update the infoDump element with the breed info
+      infoDump.innerHTML = breedInfo;
+    }
+    
+
+
+
+    
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+initialLoad(); 
 
 /**
  * 2. Create an event handler for breedSelect that does the following:
