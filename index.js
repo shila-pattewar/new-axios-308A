@@ -25,7 +25,7 @@ const API_KEY = 'live_idJUGho6IPXwcOLozWvpFLGjj3Jg0QoSd5It7nSxL6MTJRJjCQPxbr7rkP
 
 async function initialLoad() {
   try {
-       const res = await fetch('https://api.thecatapi.com/v1/breeds');
+       const res = await axios('https://api.thecatapi.com/v1/breeds');
        const data = await res.json();
        console.log(data);
 
@@ -72,12 +72,12 @@ initialLoad();
 
       // Fetch breed details
       let breedURL = "https://api.thecatapi.com/v1/breeds";
-      const breedResponse = await fetch(breedURL);
+      const breedResponse = await axios(breedURL);
       const breedData = await breedResponse.json();
 
     
       let imageURL = "https://api.thecatapi.com/v1/images/search?limit=5";
-      const imageResponse = await fetch(imageURL); // Removed headers
+      const imageResponse = await axios(imageURL); // Removed headers
       const imageData = await imageResponse.json();
 
       // Loop through the images and append them to the carousel
