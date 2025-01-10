@@ -89,6 +89,41 @@ initialLoad();
       const imageData = imageResponse.data; 
       //const imageData = await imageResponse.json();
 
+
+      //Add Axios interceptors to log the time between request and response to the console.
+      axios.interceptors.request.use(request => {
+        request.metadata = request.metadata || {};
+        request.metadata.startTime = new Date().getTime();
+        return request;
+    });
+
+    // Add Axios interceptors to log the time between request and response to the console.
+      axios.interceptors.response.use(
+          (response) => {
+              response.config.metadata.endTime = new Date().getTime();
+              response.durationInMS = response.config.metadata.endTime - response.config.metadata.startTime;
+
+              return response;
+          },
+          (error) => {
+              error.config.metadata.endTime = new Date().getTime();
+              error.durationInMS = error.config.metadata.endTime - error.config.metadata.startTime;
+              console.log(`Request not taken ${error.durationInMS} milliseconds.`)
+              
+              return Promise.reject(error);
+      });
+
+          (async () => {
+            const url = "https://api.thecatapi.com/v1/breeds";
+        
+            const { data, durationInMS } = await axios(url);
+            console.log(`Request took ${durationInMS} milliseconds.`);
+        })();
+
+          function updateProgress (progressEvent) {
+            progressBar.style.width = `${}`
+          
+          }
       // Loop through the images and append them to the carousel
     
       imageData.forEach(image => 
