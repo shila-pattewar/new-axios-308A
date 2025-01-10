@@ -2,6 +2,9 @@ import * as Carousel from './Carousel.js';
 // You have axios, you don't need to import it
 console.log(axios);
 
+// Alternatively, if it's a custom header:
+axios.defaults.headers.common['X-API-Key'] = 'live_idJUGho6IPXwcOLozWvpFLGjj3Jg0QoSd5It7nSxL6MTJRJjCQPxbr7rkPSJvnsI';
+
 // The breed selection input element.
 const breedSelect = document.getElementById('breedSelect');
 // The information section div element.
@@ -25,9 +28,12 @@ const API_KEY = 'live_idJUGho6IPXwcOLozWvpFLGjj3Jg0QoSd5It7nSxL6MTJRJjCQPxbr7rkP
 
 async function initialLoad() {
   try {
-       const res = await axios('https://api.thecatapi.com/v1/breeds');
-       const data = await res.json();
-       console.log(data);
+       const response = await axios('https://api.thecatapi.com/v1/breeds');
+       console.log(response);  // Check the response structure
+       const data = response.data;  // Make sure response has `data`
+       console.log(data);  // Log data to ensure it's defined
+       //const data = await response.json();
+
 
        for (const breed of data)
        {
@@ -73,14 +79,18 @@ initialLoad();
       // Fetch breed details
       let breedURL = "https://api.thecatapi.com/v1/breeds";
       const breedResponse = await axios(breedURL);
-      const breedData = await breedResponse.json();
+      const breedData = breedResponse.data; 
+      //const breedData = await breedResponse.json();
 
     
       let imageURL = "https://api.thecatapi.com/v1/images/search?limit=5";
+      
       const imageResponse = await axios(imageURL); // Removed headers
-      const imageData = await imageResponse.json();
+      const imageData = imageResponse.data; 
+      //const imageData = await imageResponse.json();
 
       // Loop through the images and append them to the carousel
+    
       imageData.forEach(image => 
         {
         const imageItem = Carousel.createCarouselItem(image.url, `Image of ${breedData.name}`);
